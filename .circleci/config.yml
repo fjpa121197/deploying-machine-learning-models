@@ -42,8 +42,10 @@ jobs:
           name: Run tests
           command: |
             . venv/bin/activate
-            py.test -vv packages/regression_model/tests
-
+            py.test -o junit_family=xunit2 --junitxml=packages/regression_model/test-results/junit.xml -vv packages/regression_model/tests
+         
+      - store_test_results:
+          path: packages/regression_model/test-results
   test_ml_api:
     <<: *defaults
     steps:
@@ -58,7 +60,10 @@ jobs:
             . venv/bin/activate
             pip install --upgrade pip
             pip install -r packages/ml_api/requirements.txt
-            py.test -vv packages/ml_api/tests -m "not differential"
+            py.test -o junit_family=xunit2 --junitxml=packages/ml_api/test-results/junit.xml -vv packages/ml_api/tests -m "not differential"
+            
+      - store_test_results:
+          path: packages/ml_api/test-results
       - save_cache:
           key: py-deps-{{ checksum "packages/ml_api/requirements.txt" }}
           paths:
@@ -104,7 +109,7 @@ jobs:
             . venv/bin/activate
             pip install -r packages/ml_api/requirements.txt
             py.test -vv packages/ml_api/tests -m differential
-
+            
 workflows:
   version: 2
   test-all:
@@ -117,7 +122,7 @@ workflows:
             - test_regression_model
             - test_ml_api
             - section_9_differential_tests
-          # filters:
-          #   branches:
-          #     only:
-          #       - master
+          filters:
+            branches:
+              only:
+                - master
