@@ -22,3 +22,9 @@ workflows:
   test-all:
     jobs:
       - test_regression_model
+      - test_ml_api
+      - train_and_upload_regression_model
+      - test_ml_api:
+          requires:
+            - train_and_upload_regression_model
+#Comment line
