@@ -42,8 +42,9 @@ jobs:
           name: Run tests
           command: |
             . venv/bin/activate
-            py.test -vv packages/regression_model/tests
-
+            py.test --junitxml=packages/regression_model/test-results/junit.xml -vv packages/regression_model/tests
+      - store_test_results:
+          path: packages/regression_model/test-results
   test_ml_api:
     <<: *defaults
     steps:
