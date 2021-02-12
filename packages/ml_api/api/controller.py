@@ -13,7 +13,7 @@ prediction_app = Blueprint('prediction_app', __name__)
 
 @prediction_app.rout('/', methods = ['GET'])
 def main_page():
-    if request.method = 'GET':
+    if request.method == 'GET':
         func_list = {}
         for rule in prediction_app.url_map.iter_rules():
             if rule.endpoint != 'static':
