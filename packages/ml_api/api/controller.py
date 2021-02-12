@@ -24,7 +24,11 @@ def version():
     if request.method == 'GET':
         return jsonify({'model_version': _version,
                         'api_version': api_version})
-
+    
+@prediction_app.route('/test_deploy', methods= ['GET'])
+def test_deploy():
+    if request.method == 'GET':
+        return 'changes to repo and deployment sucessfully'
 
 @prediction_app.route('/v1/predict/regression', methods=['POST'])
 def predict():
