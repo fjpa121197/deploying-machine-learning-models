@@ -11,7 +11,7 @@ _logger = get_logger(logger_name=__name__)
 
 prediction_app = Blueprint('prediction_app', __name__)
 
-@prediction_app.rout('/', methods = ['GET'])
+@prediction_app.route('/', methods = ['GET'])
 def main_page():
     if request.method == 'GET':
         func_list = {}
