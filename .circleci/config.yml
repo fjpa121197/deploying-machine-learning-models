@@ -42,8 +42,10 @@ jobs:
           name: Run tests
           command: |
             . venv/bin/activate
-            py.test -vv packages/regression_model/tests
-
+            py.test -o junit_family=xunit2 --junitxml=packages/regression_model/test-results/junit.xml -vv packages/regression_model/tests
+         
+      - store_test_results:
+          path: packages/regression_model/test-results
   test_ml_api:
     <<: *defaults
     steps:
@@ -58,7 +60,10 @@ jobs:
             . venv/bin/activate
             pip install --upgrade pip
             pip install -r packages/ml_api/requirements.txt
-            py.test -vv packages/ml_api/tests -m "not differential"
+            py.test -o junit_family=xunit2 --junitxml=packages/ml_api/test-results/junit.xml -vv packages/ml_api/tests -m "not differential"
+            
+      - store_test_results:
+          path: packages/ml_api/test-results
       - save_cache:
           key: py-deps-{{ checksum "packages/ml_api/requirements.txt" }}
           paths:
@@ -105,6 +110,7 @@ jobs:
             pip install -r packages/ml_api/requirements.txt
             py.test -vv packages/ml_api/tests -m differential
 
+
   section_10_deploy_to_heroku:
     <<: *defaults
     steps:
@@ -112,14 +118,14 @@ jobs:
       - run:
           name: Deploy to Heroku
           command: |
-            git push https://heroku:$HEROKU_API_KEY@git.heroku.com/$HEROKU_APP_NAME.git master
+            git push https://heroku:$HEROKU_API_KEY@git.heroku.com/$HEROKU_APP_NAME.git francisco_model:master 
   
   section_11_build_and_push_to_heroku_docker:
     <<: *defaults
     steps:
       - checkout
       - setup_remote_docker:
-          docker_layer_caching: true
+          docker_layer_caching: false
       - run: docker login --username=$HEROKU_EMAIL --password=$HEROKU_API_KEY registry.heroku.com
       - run:
           name: Setup Heroku CLI
@@ -184,4 +190,5 @@ workflows:
            filters:
              branches:
                only:
-                 - master
+                 - francisco_model
+

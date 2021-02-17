@@ -11,7 +11,15 @@ _logger = get_logger(logger_name=__name__)
 
 prediction_app = Blueprint('prediction_app', __name__)
 
-
+@prediction_app.route('/', methods = ['GET'])
+def main_page():
+    if request.method == 'GET':
+        func_list = {}
+        for rule in prediction_app.url_map.iter_rules():
+            if rule.endpoint != 'static':
+                func_list[rule.rule] = app.view_functions[rule.endpoint].__doc__
+        return jsonify(func_list)
+                
 @prediction_app.route('/health', methods=['GET'])
 def health():
     if request.method == 'GET':
@@ -25,11 +33,17 @@ def version():
         return jsonify({'model_version': _version,
                         'api_version': api_version})
 
+
 @prediction_app.route('/health-point', methods=['GET'])
 def version():
     if request.method == 'GET':
         return jsonify({'model_version': _version,
                         'api_version': api_version, 'health_status': 'ok'})
+    
+@prediction_app.route('/test_deploy', methods= ['GET'])
+def test_deploy():
+    if request.method == 'GET':
+        return 'changes to repo and deployment sucessfully'
 
 @prediction_app.route('/v1/predict/regression', methods=['POST'])
 def predict():
