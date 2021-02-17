@@ -25,6 +25,11 @@ def version():
         return jsonify({'model_version': _version,
                         'api_version': api_version})
 
+@prediction_app.route('/health-point', methods=['GET'])
+def version():
+    if request.method == 'GET':
+        return jsonify({'model_version': _version,
+                        'api_version': api_version, 'health_status': 'ok'})
 
 @prediction_app.route('/v1/predict/regression', methods=['POST'])
 def predict():
