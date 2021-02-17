@@ -1,18 +1,18 @@
-NAME=ml-api-pachis
-
+NAME_HEROKU=ml-api-pachis
+NAME_AWS=ml_api_pachis
 
 build-ml-api-heroku:
-	docker build --build-arg PIP_EXTRA_INDEX_URL=${PIP_EXTRA_INDEX_URL} -t registry.heroku.com/$(NAME)/web .
+	docker build --build-arg PIP_EXTRA_INDEX_URL=${PIP_EXTRA_INDEX_URL} -t registry.heroku.com/$(NAME_HEROKU)/web .
 
 push-ml-api-heroku:
 	docker push registry.heroku.com/${HEROKU_APP_NAME}/web:latest
 
 build-ml-api-aws:
-	docker build --build-arg PIP_EXTRA_INDEX_URL=${PIP_EXTRA_INDEX_URL} -t $(NAME):latest .
+	docker build --build-arg PIP_EXTRA_INDEX_URL=${PIP_EXTRA_INDEX_URL} -t $(NAME_AWS):latest .
 
 push-ml-api-aws:
-	docker push ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/$(NAME):latest
+	docker push ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/$(NAME_AWS):latest
 
 tag-ml-api:
-	docker tag $(NAME):latest ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/$(NAME):latest
+	docker tag $(NAME_AWS):latest ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/$(NAME_AWS):latest
 
